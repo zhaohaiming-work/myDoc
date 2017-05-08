@@ -93,7 +93,6 @@
 			</div>
 			<div class="page-content">
 				<ul class="list-container">
-
 				</ul>
 			</div>
 			<div class="page-side">
@@ -215,10 +214,15 @@
 								originNum--;
 							}
 							changeBtn(originNum);
-						})
+						});
+						//加载完成数据后默认激发一下第一个的点击事件
+						if(allPages&&allPages>0){
+							$('.page-list-left').trigger('click');
+						}
 					}
 				}
-				PageBar(13,function (index) {
+
+				PageBar(2,function (index) {
 					console.log(index);
 				});
 			})(jQuery)
