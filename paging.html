@@ -1,6 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<<<<<<< HEAD
+=======
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>简单的分页</title>
+</head>
+<style type="text/css">
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    font-family: "微软雅黑";
+    padding-top: 50px;
+  }
+  
+  li {
+    list-style: none;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #000;
+  }
+  
+  .page-container {
+    display: inline-block;
+  }
+  
+  .page-side,
+  .page-content {
+    float: left;
+  }
+  
+  .page-ellipsis-left,
+  .page-ellipsis-right {
+    display: none;
+  }
+  
+  .page-side a,
+  .page-side i,
+  .page-side span {
+    float: left;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 28px;
+    border: 1px #ccc solid;
+  }
+  
+  .page-side i {
+    line-height: 20px;
+    border: none;
+  }
+  
+  .page-list {
+    cursor: pointer;
+    text-align: center;
+    line-height: 28px;
+    float: left;
+    width: 30px;
+    height: 30px;
+    border: 1px #ccc solid;
+  }
+  
+  .page-content {
+    width: 90px;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .list-container {
+    position: absolute;
+    height: 100%;
+  }
+  
+  .list-container li+li {
+    /*border-left: 0;*/
+  }
+  
+  .active {
+    background: #ccc;
+    color: #fff;
+  }
+  
+  .page-minus {
+    border-radius: 3px 0 0 3px;
+  }
+  
+  .page-add {
+    border-radius: 0 3px 3px 0;
+  }
+</style>
+
+<body>
+	<!--用法：
+	先引入jq
+	本插件为jq的插件写法
+	需要用插件的方法调用
+		
+	-->
+  <section class="page">
+    <div class="page-container">
+      
+    </div>
+  </section>
+
+
+  <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+  <script type="text/javascript">
+    (function($) {
+      $.fn.PageBar = function(allPages, callBack) {
+				var pageContainer = $('.page-container');
+				var template = '<div class="page-side"><a href="javascript:;" class="page-minus"> « </a><span class="page-list page-list-left  active">1</span><i class="page-ellipsis-left">...</i></div><div class="page-content"><ul class="list-container"></ul></div><div class="page-side"><i class="page-ellipsis-right">...</i><span class="page-list page-list-right">2</span><a href="javascript:;" class="page-add"> » </a></div>';
+				pageContainer.html(template);
+        var listContainer = $('.list-container'),
+          pageMinus = $('.page-minus'),
+          pageAdd = $('.page-add'),
+          pageContent = $('.page-content');
+        	pageListLeft = $('.page-list-left'),
+          pageListRight = $('.page-list-right'),
+          pageEllipsisLeft = $('.page-ellipsis-left'),
+          pageEllipsisRight = $('.page-ellipsis-right'),
+          allNum = Number(allPages),
+          // 全局变量控制索引值
+          originNum = 1;
+        if (!allNum) {
+          $('.page-container').hide();
+          return;
+        }
+        if (allNum == 0) {
+          pageContent.hide();
+          pageListLeft.hide();
+          pageListRight.hide();
+        } else if (allNum == 1) {
+          pageContent.hide();
+          pageListRight.hide();
+          pageListLeft.attr('data-index', 1);
+					change();
+        } else if (allNum == 2) {
+          pageContent.hide();
+          showRightBtn();
+          change();
+        } else if (allNum > 2 && allNum <= 5) {
+          pageContent.css('width', (allNum - 2) * 30);
+          showRightBtn();
+          renderList();
+          change();
+        } else if (allNum > 5) {
+          pageEllipsisRight.show();
+          showRightBtn();
+          renderList();
+          change();
+        }
+        // 封装右侧列表显示以及自定义属性的定义
+        function showRightBtn() {
+          pageListLeft.attr('data-index', 1);
+          pageListRight.attr('data-index', allNum);
+          pageListRight.html(allNum);
+          listContainer.css('width', (allNum - 2) * 30)
+        }
+        // 渲染出列表按钮
+        function renderList() {
+          var str = "";
+          for (var i = 0; i < allNum - 2; i++) {
+            str += '<li class="page-list" data-index="' + (i + 2) + '">' + (i + 2) + '</li>';
+          }
+          listContainer.html(str);
+        }
+        // 按钮的点击事件（包括两端按钮的点击事件）
+        function change() {
+          // 每个按钮的点击事件
+          pageContainer.on('click', '.page-list', function() {
+              var index = Number($(this).attr('data-index'));
+              changeBtn(index);
+            })
+            // 按钮列表的变化函数
+          function changeBtn(index) {
+            var index = index;
+            $('.page-list').each(function() {
+              if ($(this).hasClass('active') || $(this).hasClass('.active')) {
+                $(this).removeClass('active');
+              }
+            });
+            $('.page-list').eq(index - 1).addClass('active');
+            originNum = index;
+            if (allNum > 5) {
+              if (index >= 4 && index <= allNum - 2) {
+                pageEllipsisRight.show();
+                pageEllipsisLeft.show();
+                listContainer.css('left', -(index - 3) * 30);
+                if (index == allNum - 2) {
+                  pageEllipsisRight.hide();
+                }
+              } else if (index < 4) {
+                listContainer.css('left', 0);
+                pageEllipsisLeft.hide();
+                pageEllipsisRight.show();
+                // 如果直接点第一个则关掉左边省了号
+                //if(index==1){
+                //pageEllipsisRight.show();
+                //}
+              } else if (index == allNum) {
+                // 如果直接点最后一个则关掉右边省略号打开左边省略号
+                pageEllipsisLeft.show();
+                pageEllipsisRight.hide();
+                listContainer.css('left', -(index - 5) * 30);
+              }
+            }
+            callBack && callBack(index);
+          }
+          // 左右两个按钮的点击事件
+          pageAdd.on('click', function() {
+            if (originNum >= allNum) {
+              originNum = allNum;
+            } else {
+              originNum++;
+            }
+            changeBtn(originNum);
+          })
+          pageMinus.on('click', function() {
+            if (originNum < 2) {
+              originNum = 1;
+            } else {
+              originNum--;
+            }
+            changeBtn(originNum);
+          })
+          if (allNum > 0) {
+            $('.page-list-left').trigger('click');
+          }
+        }
+      }
+      $('.page').PageBar(8, function(index) {
+        console.log(index);
+      });
+    })(jQuery)
+  </script>
+</body>
+
+</html>
+
+>>>>>>> haiming
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
