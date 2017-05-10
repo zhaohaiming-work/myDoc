@@ -1,0 +1,27 @@
+{
+  "name": "haiming",
+  "version": "1.0.0",
+  "description": "this a webpack project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":"webpack-dev-server --hot --inline"
+  },
+  "keywords": [
+    "webpack"
+  ],
+  "author": "haiming",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^0.28.1",
+    "exports-loader": "^0.6.4",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "jsx-loader": "^0.13.2",
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.4",
+    "style-loader": "^0.17.0",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
+  }
+}
