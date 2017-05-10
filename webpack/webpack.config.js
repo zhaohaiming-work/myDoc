@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var commonsPlugin = new webpack.optimize.CommonsChunkPlugin('common.js');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var path = require('path');
 module.exports = {
     //插件项
 //     plugins: [commonsPlugin],
@@ -11,15 +12,21 @@ module.exports = {
     },
     //入口文件输出配置
     output: {
-        path: __dirname+'/dist/js',
-        filename: '[name].js'
+        path:__dirname+'./dist',
+        filename: 'bundle.js',
+        publicPath: '/dist/'
     },
     devServer: {
+        historyApiFallback:true,
         contentBase : "./",
         open : true,
         port: 9000,
-        inline: true
+        inline: true,
+        hot:true
     },
+    plugins: [
+        new webpack.HotModuleReplacementPlugin()
+    ],
     module: {
         //加载器配置
         loaders: [
